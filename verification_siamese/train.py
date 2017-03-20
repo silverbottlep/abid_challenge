@@ -80,7 +80,10 @@ def main():
     # create model
     print("=> creating model '{}'".format(args.arch))
     cnn_model = models.__dict__[args.arch]()
-    net = siamese.siamese_resnet(cnn_model)
+    if 'resnet' in args.arch:
+        net = siamese.siamese_resnet(cnn_model)
+    else:
+        net = siamese.siamese_vgg(cnn_model)
     
     net.cuda()
 
