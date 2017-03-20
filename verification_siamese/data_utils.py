@@ -25,25 +25,25 @@ class ImageFolderSiamesePair(data.Dataset):
         self.target_transform = target_transform
         self.loader = loader
         self.N_train = len(self.train_list)
+        self.rand = np.random.RandomState()
     
     def __getitem__(self, index):
         # pick up the training image
         train_item = self.train_list[index]
-        inst_list = train_item[1]
-        N_ins = len(inst_list)
+        obj_list = train_item[1]
         img1_path = '%05d.jpg' % (train_item[0]+1)
 
         # pick up the pairing image, 
         # if positive it should have at least one commone object
         # if negative it should not have common object
-        target = np.random.binomial(1,self.pos_prob)
+        target = self.rand.binomial(1,self.pos_prob)
         if target == 1:
-          inst_id = random.randint(0,N_ins-1)
-          target_list = inst_list[inst_id][1]
-          img2_idx = target_list[random.randint(0,len(target_list)-1)]+1
+          obj_id = self.rand.randint(0,len(obj_list))
+          target_list = obj_list[obj_id][1]
+          img2_idx = target_list[self.rand.randint(0,len(target_list))]+1
           img2_path = '%05d.jpg' % img2_idx
         else:
-          temp = random.randint(0,self.N_train-1)
+          temp = self.rand.randint(0,self.N_train)
           img2_idx = self.train_list[temp][0]+1
           img2_path = '%05d.jpg' % (img2_idx)
 
@@ -73,8 +73,8 @@ class ImageFolderSiamesePairVal(data.Dataset):
         self.transform = transform
         self.target_transform = target_transform
         self.loader = loader
-        #self.N_val = len(self.val_list)
-        self.N_val = 20000
+        self.N_val = len(self.val_list)
+        self.rand = np.random.RandomState()
     
     def __getitem__(self, index):
         # pick up the validation image
@@ -94,7 +94,7 @@ class ImageFolderSiamesePairVal(data.Dataset):
         
         # pick up the target image in the training set
         for i in range(n_target):
-          img2_idx = target_list[random.randint(0,len(target_list)-1)]+1
+          img2_idx = target_list[self.rand.randint(0,len(target_list))]+1
           img2_path = '%05d.jpg' % img2_idx
           img2 = self.loader(os.path.join(self.root, img2_path))
           if self.transform is not None:
