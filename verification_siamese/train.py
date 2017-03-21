@@ -82,12 +82,14 @@ def main():
     # create model
     print("=> creating model '{}'".format(args.arch))
     if args.ft:
-      cnn_model = models.__dict__[args.arch](pretrained=True)
-      # first freeze the weights in conv layers
-      for param in cnn_model.parameters():
-        param.requires_grad = False
+        cnn_model = models.__dict__[args.arch](pretrained=True)
+        # first freeze the weights in conv layers
+        for param in cnn_model.parameters():
+            param.requires_grad = False
+        snapshot_fname = "snapshots/%s_siamese_ft.pth.tar" % args.arch
     else:
-      cnn_model = models.__dict__[args.arch](pretrained=False)
+        cnn_model = models.__dict__[args.arch](pretrained=False)
+        snapshot_fname = "snapshots/%s_siamese.pth.tar" % args.arch
 
     # create siamese network based on different cnn architectures
     if 'resnet' in args.arch:
@@ -161,7 +163,6 @@ def main():
         # remember best prec@1 and save checkpoint
         is_best = prec > best_prec
         best_prec = max(prec, best_prec)
-        filename = "snapshots/%s_siamese.pth.tar" % args.arch
         torch.save({ 
             'epoch': epoch + 1,
             'arch': args.arch,
@@ -169,9 +170,9 @@ def main():
             'best_prec': best_prec,
             'train_loss_list': train_loss_list,
             'val_acc_list': val_acc_list,
-        }, filename)
+        }, snapshot_fname)
         if is_best:
-            shutil.copyfile(filename,'snapshots/%s_siamese_best.pth.tar' % args.arch)
+            shutil.copyfile(snapshot_fname,'snapshots/%s_siamese_best.pth.tar' % args.arch)
 
 def train(train_loader, model, criterion, optimizer, epoch):
     cur_lr = adjust_learning_rate(optimizer, epoch)
