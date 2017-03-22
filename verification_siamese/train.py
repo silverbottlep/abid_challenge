@@ -33,7 +33,6 @@ parser.add_argument('--start-epoch', default=0, type=int, metavar='N', help='man
 parser.add_argument('-b', '--batch_size', default=128, type=int, metavar='N', help='mini-batch size (default: 256)')
 parser.add_argument('--lr', '--learning-rate', default=0.1, type=float, metavar='LR', help='initial learning rate')
 parser.add_argument('--lrd','--learning-rate-decay-step', default=10, type=int, metavar='N', help='learning rate decay epoch')
-parser.add_argument('--ft','--fine-tune', default=False, type=bool, metavar='BOOL', help='use pretrained weights, freezing pretrained weights')
 parser.add_argument('--momentum', default=0.9, type=float, metavar='M', help='momentum')
 parser.add_argument('--weight-decay', '--wd', default=1e-4, type=float, metavar='W', help='weight decay (default: 1e-4)')
 parser.add_argument('--print-freq', '-p', default=10, type=int, metavar='N', help='print frequency (default: 10)')
@@ -80,22 +79,8 @@ def main():
 
     # create model
     print("=> creating model '{}'".format(args.arch))
-    if args.ft:
-        cnn_model = models.__dict__[args.arch](pretrained=True)
-        # freeze the weights in conv layers
-        for param in cnn_model.parameters():
-            param.requires_grad = False
-        net = siamese.siamese_resnet(cnn_model)
-        params = net.classifier.parameters()
-        snapshot_fname = "snapshots/%s_siamese_ft.pth.tar" % args.arch
-        snapshot_best_fname = "snapshots/%s_siamese_ft_best.pth.tar" % args.arch
-    else:
-        cnn_model = models.__dict__[args.arch](pretrained=False)
-        net = siamese.siamese_resnet(cnn_model)
-        params = net.parameters()
-        snapshot_fname = "snapshots/%s_siamese.pth.tar" % args.arch
-        snapshot_best_fname = "snapshots/%s_siamese_best.pth.tar" % args.arch
-
+    cnn_model = models.__dict__[args.arch](pretrained=False)
+    net = siamese.siamese_resnet(cnn_model)
     net.cuda()
 
     # optionally resume from a checkpoint
@@ -108,12 +93,13 @@ def main():
             best_prec = checkpoint['best_prec']
             train_loss_list = checkpoint['train_loss_list']
             val_acc_list = checkpoint['val_acc_list']
-            # training all weights
-            for param in net.parameters():
-                param.requires_grad = True
             params = net.parameters()
         else:
             print("=> no checkpoint found at '{}'".format(args.resume))
+
+    params = net.parameters()
+    snapshot_fname = "snapshots/%s_siamese.pth.tar" % args.arch
+    snapshot_best_fname = "snapshots/%s_siamese_best.pth.tar" % args.arch
 
     cudnn.benchmark = True
 
