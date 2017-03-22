@@ -54,7 +54,7 @@ def show_image_pair(im1,im2,target):
     img_pair_disp = Image.fromarray(img_pair_batch)
     img_pair_disp.show()
 
-def show_image_pair_val(im1,im2,target):
+def show_image_pair_val(im1,im2,target,iter):
     print('positive or negative: %d' % target[0])
     npimg1 = np.transpose(im1[0].mul(255).byte().numpy(), (1,2,0))
     npimg2 = np.transpose(im2[0].mul(255).byte().numpy(), (1,2,0))
@@ -67,7 +67,8 @@ def show_image_pair_val(im1,im2,target):
             img_pair = np.concatenate((npimg1,npimg2), axis=1)
             img_pair_batch = np.concatenate((img_pair_batch,img_pair), axis=0)
     img_pair_disp = Image.fromarray(img_pair_batch)
-    img_pair_disp.show()
+    img_pair_disp.save('./temp/%d.jpg' % iter)
+    #img_pair_disp.show()
 
 
 best_prec = 0
@@ -221,7 +222,7 @@ def validate(val_loader, model, criterion):
         im1 = im1.view(-1,3,224,224)
         im2 = im2.view(-1,3,224,224)
         target = target.view(-1)
-        #show_image_pair_val(im1,im2,target)
+        #show_image_pair_val(im1,im2,target,i)
 
         target = target.float().cuda(async=True)
         im1 = im1.cuda(async=True)
@@ -249,6 +250,10 @@ def validate(val_loader, model, criterion):
                 i, len(val_loader), n_pos=n_pos, n_target=n_target,
                 batch_time=batch_time,
                 val_acc=val_acc))
+#        print(target[0])
+#        print(output.data)
+#        print(output.data.gt(0.5))
+
 
     print(' * Prec {val_acc.avg:.3f}'.format(val_acc=val_acc))
 
