@@ -125,15 +125,15 @@ You need to download the dataset first and locate images and metadata in same di
 ```
 $(abid_challenge_root)/dataset> ln -s $(data) ./data
 ```
-Now, we are going to make verification data which will be used for training.
+Now, we are going to make verification data which will be used for training. For training purpose, we only consider the images that contain less than 6 quantity in a bin. If there are a large number of objects in a bin, sometimes it is hard to see the objects since they are heavily occluded each other.
 
-#### Downloading pre-processed verification data
+#### 3.1.1 Downloading pre-processed verification data
 You can simply download pre-processed verification data for training and validataion sets by running script. You will get 'verification_train.json' and 'verification_val.json' files in $(abid_challenge_root)/dataset directory 
 ```
 $(abid_challenge_root)/dataset> ./get_verification_data.sh
 ```
 
-#### (optional) Generating verification data
+#### 3.1.2 (optional) Generating verification data
 You can optionally make your own verification data files. First, let's randomly split images into train and validataion sets. By running script, you will get 'random_train.txt' and 'random_val.txt' files.
 ```
 $(abid_challenge_root)/dataset> python random_split.py
@@ -149,7 +149,7 @@ You will see 'metadata.json'(~640M) and 'instances.json'(76M) files. 'metadata.j
 $(abid_challenge_root)/dataset> python make_verification_data.py
 ```
 
-#### Resizing images
+#### 3.1.3 Resizing images
 For convinient training purpose, we will resize all image into 224x224. You will have new directory $(data)/public_images_resize that contain resized images
 ```
 $(abid_challenge_root)/dataset> python resize_image.py
