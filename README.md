@@ -174,21 +174,21 @@ You can download pre-trained models [here](http://www.cs.unc.edu/~eunbyung/abidc
 $(abid_challenge_root)/verification_siamese> CUDA_VISIBLE_DEVICES=0 python train.py ~/Works/data/amazon_bin/public_images_resize/ -a resnet34 --evaluate True --resume ./snapshots/resnet34_siamese_best.pth.tar
 ```
 
-Followings are a few of examples. The left image is the image in question, and the right image is from training image. Pred is prediction of the network and GT is ground truth. We also put estimated probability in the bracket. If GT is 1, then both images should have common object. If GT is 0, then both images should not have common object.
+Followings are a few of examples. You are given a question, e.g. Is there an Prebles' Artforms(11th Edition) in the bin? and an image in question(left image). The right image is picked from training image that the contains the object in question. Pred is prediction of the network and GT is ground truth. We also put estimated probability in the bracket. If GT is 'yes', then both images should have the object in question. If GT is 'no', then both images should not have the object in question.
 
-![example1](http://www.cs.unc.edu/~eunbyung/abidc/example1.png)
+![example1](http://www.cs.unc.edu/~eunbyung/abidc/example1_.png)
 
-![example2](http://www.cs.unc.edu/~eunbyung/abidc/example2.png)
+![example2](http://www.cs.unc.edu/~eunbyung/abidc/example2_.png)
 
-![example3](http://www.cs.unc.edu/~eunbyung/abidc/example3.png)
+![example3](http://www.cs.unc.edu/~eunbyung/abidc/example3_.png)
 
-![example4](http://www.cs.unc.edu/~eunbyung/abidc/example4.png)
+![example4](http://www.cs.unc.edu/~eunbyung/abidc/example4_.png)
 
-![example5](http://www.cs.unc.edu/~eunbyung/abidc/example5.png)
+![example5](http://www.cs.unc.edu/~eunbyung/abidc/example5_.png)
 
-![example6](http://www.cs.unc.edu/~eunbyung/abidc/example6.png)
+![example6](http://www.cs.unc.edu/~eunbyung/abidc/example6_.png)
 
-![example7](http://www.cs.unc.edu/~eunbyung/abidc/example7.png)
+![example7](http://www.cs.unc.edu/~eunbyung/abidc/example7_.png)
 
 ## 4 Challenge
 We will release test sets and open the registration soon. Stay tuned!
