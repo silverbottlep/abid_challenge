@@ -15,6 +15,7 @@ import torchvision.models as models
 
 import data_utils
 import numpy as np
+from PIL import Image
 
 model_names = sorted(name for name in models.__dict__
     if name.islower() and not name.startswith("__")
@@ -36,11 +37,22 @@ parser.add_argument('--print-freq', '-p', default=10, type=int, metavar='N', hel
 parser.add_argument('--resume', default='', type=str, metavar='PATH', help='path to latest checkpoint (default: none)')
 parser.add_argument('--evaluate', default=False, type=bool, metavar='BOOL', help='evaluate or train')
 
+def show_image(im,target):
+    print('count: %d' % target[0])
+    npimg = np.transpose(im[0].mul(255).byte().numpy(), (1,2,0))
+    img_batch = npimg
+    for idx in range(5):
+        print('count : %d' % target[idx+1])
+        npimg = np.transpose(im[idx+1].mul(255).byte().numpy(), (1,2,0))
+        img_batch = np.concatenate((img_batch,npimg), axis=0)
+    img_pair_disp = Image.fromarray(img_batch)
+    img_pair_disp.show()
+
 best_prec = 0
-train_losses = []
-val_losses = []
+train_loss_list = []
+val_acc_list= []
 def main():
-    global args, best_prec, train_losses, val_errs
+    global args, best_prec, train_loss_list, val_acc_list
     args = parser.parse_args()
 
     # create model
@@ -142,6 +154,8 @@ def train(train_loader, net, criterion, optimizer, epoch):
     for i, (input, target) in enumerate(train_loader):
         # measure data loading time
         data_time.update(time.time() - end)
+        
+        #show_image(input,target)
 
         target = target.cuda(async=True)
         input = input.cuda(async=True)
@@ -169,12 +183,12 @@ def train(train_loader, net, criterion, optimizer, epoch):
         batch_time.update(time.time() - end)
         end = time.time()
 
-        print('Epoch: [{0}][{1}/{2}]\t'
+        print('Epoch: [{0}][{1}/{2}] lr {cur_lr:.5f}\t'
               'Time {batch_time.val:.3f} ({batch_time.avg:.3f})\t'
               'Data {data_time.val:.3f} ({data_time.avg:.3f})\t'
               'Loss {loss.val:.4f} ({loss.avg:.4f})\t'
               'Prec {train_acc.val:.3f} ({train_acc.avg:.3f})'.format(
-               epoch, i, len(train_loader), batch_time=batch_time,
+               epoch, i, len(train_loader), cur_lr=cur_lr, batch_time=batch_time,
                data_time=data_time, loss=losses, train_acc=train_acc))
         train_losses.append(losses.val)
 
@@ -204,6 +218,7 @@ def validate(val_loader, net, criterion):
 
         # measure accuracy and record loss
         losses.update(loss.data[0], input.size(0))
+        val_acc.update(acc, input.size(0))
 
         # measure elapsed time
         batch_time.update(time.time() - end)
