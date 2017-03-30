@@ -6,26 +6,26 @@ The Amazon Bin Image Dataset contains images and metadata from bins of a pod in 
 
 ### 1.1. Counting
 This is a simple task that you are supposed to count every object instances in the bin. This is object category agnostic task, which means if there are two same objects in the bin, you count them as two.
-![counting](http://www.cs.unc.edu/~eunbyung/abidc/counting.png)
+![counting](figs/counting.png)
 
 ### 1.2. Object verification 
 This is a task for verifying the presence of the object in the bin. You will be given an image and question pair. The question contains object category and presence, e.g. 'Is there a toothbrush in the bin?'. your program should be able to give an answer 'yes' or 'no'.  
-![obj_verification](http://www.cs.unc.edu/~eunbyung/abidc/obj_verification.png)
+![obj_verification](figs/obj_verification.png)
 
 ### 1.3. Object quantity verification 
 This is a task for verifying the quantity of the object in the bin. You will be given an image and question pair. The question contains the quantity of the object, e.g. 'are there 2 toothbrush in the bin?', your program should be able to give an answer 'yes' or 'no'.
 
-![obj_quant_verification](http://www.cs.unc.edu/~eunbyung/abidc/obj_quant_verification.png)
+![obj_quant_verification](figs/obj_quant_verification.png)
 
 ## 2. Dataset
 
 These are some typical images in the dataset. A bin contains multiple object categories and various number of instances. The corresponding metadata exist for each bin image and it includes the object category identification(Amazon Standard Identification Number, ASIN), quantity, size of objects, weights, and so on. The size of bins are various depending on the size of objects in it. The tapes in front of the bins are for preventing the items from falling out of the bins and sometimes it might make the objects unclear. Objects are sometimes heavily occluded by other objects or limited viewpoint of the images.
 
-![abid_images](http://www.cs.unc.edu/~eunbyung/abidc/abid_images.png)
+![abid_images](figs/abid_images.png)
 
 ### 2.1 Metadata
 
-![ex1](http://www.cs.unc.edu/~eunbyung/abidc/image1_small.jpg)
+![ex1](figs/image1_small.jpg)
 
 ```
 {
@@ -110,7 +110,7 @@ This is an example of image(jpg) and metadata(json) pair. This image contains 3 
 | Average quantity in a bin | 5.1 |
 | The number of object categories | 459,476 |
 
-![stats](http://www.cs.unc.edu/~eunbyung/abidc/stats.png)
+![stats](figs/stats.png)
 
 The left figure shows the distribution of quantity in a bin(90% of bin images contains less then 10 object instances in a bin). The right figure shows the distribution of object repetition. 164,255 object categories (out of 459,475) showed up only once across entire dataset, and 164,356 object categories showed up twice. The number of object categories that showed up 10 times was 3038.
 
@@ -177,8 +177,8 @@ $(abid_challenge_root)/counting> CUDA_VISIBLE_DEVICES=0 python train.py $(data)/
 ```
 It will run 40 epochs, and every 10 epochs learning rate will decay by a factor of 0.1. One epoch means the network goes through all training images once. Batch size is 128. Following shows loss curves and validation accuracy. Here we got best validation accuracy at 21 epoch. As you might notice, it will start to overfit after 21 epoch.
 
-![train_loss](http://www.cs.unc.edu/~eunbyung/abidc/counting_train_loss.png)
-![val_acc](http://www.cs.unc.edu/~eunbyung/abidc/counting_val_acc.png)
+![train_loss](figs/counting_train_loss.png)
+![val_acc](figs/counting_val_acc.png)
 
 #### 4.1.1 Pretrain models
 You can download pre-trained models [here](http://www.cs.unc.edu/~eunbyung/abidc/resnet34_best.pth.tar)
@@ -207,11 +207,11 @@ We provide one baseline method for object verification task. Since the number of
 
 This is based on following paper, Siamese neural networks for one-shot image recognition, Gregory Koch, Richard Zemel, Ruslan Salakhutdinov, ICML Deep Learning Workshop, 2015, [pdf](http://www.cs.cmu.edu/~rsalakhu/papers/oneshot1.pdf). 
 
-![siamese](http://www.cs.unc.edu/~eunbyung/abidc/siamese_small.png)
+![siamese](figs/siamese_small.png)
 
 When testing, we are given one image and the name of object category(asin) in question. From training images, we pick all images that contain the object category in question, and make pairs with the given image. And, we will make final decision as a majority votes based on the results from all pairs. More formally,
 
-![equation](http://www.cs.unc.edu/~eunbyung/abidc/eq.png)
+![equation](figs/eq.png)
 
 ,where S is the set of {x1,x2} image pair, one is test image and one from training images that contains the object category in question. 1[ ] is an indicator function and p is estimated probability of being positive by siamese network.
 
@@ -223,8 +223,8 @@ $(abid_challenge_root)/verification_siamese> CUDA_VISIBLE_DEVICES=0 python train
 ```
 It will run 40 epochs, and every 10 epochs learning rate will decay by a factor of 0.1. 1 epoch means the network goes through all training images once. Resnet34 architecture will be used and it will be trained from the scratch and batch size is 128. Following shows loss curves and validation accuracy. Here we got best validation accuracy at 36 epoch.
 
-![train_loss](http://www.cs.unc.edu/~eunbyung/abidc/train_loss.png)
-![val_acc](http://www.cs.unc.edu/~eunbyung/abidc/val_acc.png)
+![train_loss](figs/obj_verification_train_loss.png)
+![val_acc](figs/obj_verification_val_acc.png)
 
 #### 5.1.1 Pretrain models
 You can download pre-trained models [here](http://www.cs.unc.edu/~eunbyung/abidc/resnet34_siamese_best.pth.tar)
@@ -237,16 +237,16 @@ You should be able to get 76.8% accuracy. You also get output file 'obj_verifica
 
 Followings are a few of examples. You are given a question, e.g. Is there an Prebles' Artforms(11th Edition) in the bin? and an image in question(left image). The right image is picked from training image that the contains the object in question. Pred is prediction of the network and GT is ground truth. We also put estimated probability in the bracket. If GT is 'yes', then both images should have the object in question. If GT is 'no', then both images should not have the object in question.
 
-![example1](http://www.cs.unc.edu/~eunbyung/abidc/example1_.png)
+![example1](figs/obj_verification_ex1.png)
 
-![example2](http://www.cs.unc.edu/~eunbyung/abidc/example2_.png)
+![example2](figs/obj_verification_ex2.png)
 
-![example3](http://www.cs.unc.edu/~eunbyung/abidc/example3_.png)
+![example3](figs/obj_verification_ex3.png)
 
-![example4](http://www.cs.unc.edu/~eunbyung/abidc/example4_.png)
+![example4](figs/obj_verification_ex4.png)
 
-![example5](http://www.cs.unc.edu/~eunbyung/abidc/example5_.png)
+![example5](figs/obj_verification_ex5.png)
 
-![example6](http://www.cs.unc.edu/~eunbyung/abidc/example6_.png)
+![example6](figs/obj_verification_ex6.png)
 
-![example7](http://www.cs.unc.edu/~eunbyung/abidc/example7_.png)
+![example7](figs/obj_verification_ex7.png)
