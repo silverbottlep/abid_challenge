@@ -109,7 +109,7 @@ def main():
                                      std=[0.229, 0.224, 0.225])
 
     train_loader = torch.utils.data.DataLoader(
-        data_utils.ImageFolderSiamesePair(args.data, '../dataset/verification_train.json', 0.5, transforms.Compose([
+        data_utils.ImageFolderSiamesePair(args.data, '../dataset/obj_verification_train.json', 0.5, transforms.Compose([
             transforms.RandomHorizontalFlip(),
             transforms.ToTensor(),
             normalize,
@@ -118,7 +118,7 @@ def main():
         num_workers=args.workers, pin_memory=True)
 
     val_loader = torch.utils.data.DataLoader(
-        data_utils.ImageFolderSiamesePairVal(args.data, '../dataset/verification_val.json', args.max_target, transforms.Compose([
+        data_utils.ImageFolderSiamesePairVal(args.data, '../dataset/obj_verification_val.json', args.max_target, transforms.Compose([
             transforms.ToTensor(),
             normalize,
         ])),
@@ -134,7 +134,7 @@ def main():
 
     # evaluate on validation set
     if args.evaluate == True:
-        validate(val_loader, net, criterion)
+        validate(val_loader, net, criterion, True)
         return
 
     for epoch in range(args.start_epoch, args.epochs):
@@ -142,7 +142,7 @@ def main():
         train(train_loader, net, criterion, optimizer, epoch)
 
         # evaluate on validation set
-        prec = validate(val_loader, net, criterion)
+        prec = validate(val_loader, net, criterion, False)
 
         # remember best prec@1 and save checkpoint
         is_best = prec > best_prec
@@ -210,12 +210,15 @@ def train(train_loader, model, criterion, optimizer, epoch):
                data_time=data_time, loss=losses, train_acc=train_acc))
         train_loss_list.append(losses.val)
 
-def validate(val_loader, model, criterion):
+def validate(val_loader, model, criterion, file_out):
     batch_time = AverageMeter()
     val_acc = AverageMeter()
 
     # switch to evaluate mode
     model.eval()
+
+    if file_out==True:
+      f = open('obj_verification_result.txt','w') 
 
     end = time.time()
     for i, (im1, im2, target) in enumerate(val_loader):
@@ -237,8 +240,12 @@ def validate(val_loader, model, criterion):
         # measure accuracy and record loss
         n_target = im1.size(0)
         n_pos = output.data.gt(0.5).sum()
-        correct = ( (n_pos/(n_target*1.0))>0.5 )==target[0]
+        pred = (n_pos/(n_target*1.0))>0.5
+        correct = pred==target[0]
         val_acc.update(correct*1.0, 1)
+
+        if file_out==True:
+            f.write('%d\n' % pred)
 
         # measure elapsed time
         batch_time.update(time.time() - end)
@@ -256,6 +263,8 @@ def validate(val_loader, model, criterion):
 
 
     print(' * Prec {val_acc.avg:.3f}'.format(val_acc=val_acc))
+    if file_out==True:
+      f.close()
 
     val_acc_list.append(val_acc.avg)
     return val_acc.avg
