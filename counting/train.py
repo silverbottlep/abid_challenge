@@ -25,8 +25,8 @@ model_names = sorted(name for name in models.__dict__
 parser = argparse.ArgumentParser(description='PyTorch ABID Counting')
 parser.add_argument('data', metavar='DIR', help='path to dataset')
 parser.add_argument('--arch', '-a', metavar='ARCH', default='resnet34', choices=model_names, help='model architecture: ' + ' | '.join(model_names) + ' (default: resnet34)')
-parser.add_argument('-j', '--workers', default=4, type=int, metavar='N', help='number of data loading workers (default: 4)')
-parser.add_argument('--epochs', default=60, type=int, metavar='N', help='number of total epochs to run')
+parser.add_argument('-j', '--workers', default=8, type=int, metavar='N', help='number of data loading workers (default: 4)')
+parser.add_argument('--epochs', default=40, type=int, metavar='N', help='number of total epochs to run')
 parser.add_argument('--start-epoch', default=0, type=int, metavar='N', help='manual epoch number (useful on restarts)')
 parser.add_argument('-b', '--batch_size', default=128, type=int, metavar='N', help='mini-batch size (default: 256)')
 parser.add_argument('--lr', '--learning-rate', default=0.1, type=float, metavar='LR', help='initial learning rate')
@@ -114,7 +114,7 @@ def main():
 
     # evaluate on validation set
     if args.evaluate == True:
-        validate(val_loader, net, criterion)
+        validate(val_loader, net, criterion, True)
         return
 
     for epoch in range(args.start_epoch, args.epochs):
@@ -122,7 +122,7 @@ def main():
         train(train_loader, net, criterion, optimizer, epoch)
 
         # evaluate on validation set
-        prec = validate(val_loader, net, criterion)
+        prec = validate(val_loader, net, criterion, False)
 
         # remember best prec@1 and save checkpoint
         is_best = prec > best_prec
@@ -133,8 +133,8 @@ def main():
             'arch': args.arch,
             'state_dict': net.state_dict(),
             'best_prec': best_prec,
-            'train_losses': train_losses,
-            'val_losses': val_losses,
+            'train_loss_list': train_loss_list,
+            'val_acc_list': val_acc_list,
         }, snapshot_fname)
         if is_best:
             shutil.copyfile(snapshot_fname,snapshot_best_fname)
@@ -190,15 +190,18 @@ def train(train_loader, net, criterion, optimizer, epoch):
               'Prec {train_acc.val:.3f} ({train_acc.avg:.3f})'.format(
                epoch, i, len(train_loader), cur_lr=cur_lr, batch_time=batch_time,
                data_time=data_time, loss=losses, train_acc=train_acc))
-        train_losses.append(losses.val)
+        train_loss_list.append(losses.val)
 
-def validate(val_loader, net, criterion):
+def validate(val_loader, net, criterion, file_out):
     batch_time = AverageMeter()
     losses = AverageMeter()
     val_acc = AverageMeter()
 
     # switch to evaluate mode
     net.eval()
+    
+    if file_out==True:
+      f = open('counting_result.txt','w') 
 
     end = time.time()
     for i, (input, target) in enumerate(val_loader):
@@ -216,6 +219,10 @@ def validate(val_loader, net, criterion):
         correct = (target==idx)
         acc = float(correct.sum())/input.size(0)
 
+        if file_out==True:
+          for j in range(input.size(0)):
+            f.write('%d\n' % idx[j][0])
+
         # measure accuracy and record loss
         losses.update(loss.data[0], input.size(0))
         val_acc.update(acc, input.size(0))
@@ -232,6 +239,8 @@ def validate(val_loader, net, criterion):
                val_acc=val_acc))
 
     print(' * Prec {val_acc.avg:.3f}'.format(val_acc=val_acc))
+    if file_out==True:
+      f.close()
 
     val_acc_list.append(val_acc.avg)
     return val_acc.avg
