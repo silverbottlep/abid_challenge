@@ -126,7 +126,7 @@ if __name__ == "__main__":
     random.shuffle(val_list)
     
     print("dumping train and val sets into json file")
-    with open('verification_train.json','wb') as f:
+    with open('obj_verification_train.json','wb') as f:
         json.dump(train_list,f)
-    with open('verification_val.json','wb') as f:
+    with open('obj_verification_val.json','wb') as f:
         json.dump(val_list,f)
