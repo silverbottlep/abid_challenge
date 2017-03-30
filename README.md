@@ -173,7 +173,7 @@ It is a simple classification network for counting task. The deep CNN will class
 ### 4.1 Training
 ```
 $(abid_challenge_root)/counting> mkdir snapshots
-$(abid_challenge_root)/counting> CUDA_VISIBLE_DEVICES=0 python train.py ~/Works/data/amazon_bin/public_images_resize/ -a resnet34 --epochs 40 --lrd 10
+$(abid_challenge_root)/counting> CUDA_VISIBLE_DEVICES=0 python train.py $(data)/public_images_resize/ -a resnet34 --epochs 40 --lrd 10
 ```
 It will run 40 epochs, and every 10 epochs learning rate will decay by a factor of 0.1. One epoch means the network goes through all training images once. Batch size is 128. Following shows loss curves and validation accuracy. Here we got best validation accuracy at 21 epoch. As you might notice, it will start to overfit after 21 epoch.
 
@@ -185,9 +185,9 @@ You can download pre-trained models [here](http://www.cs.unc.edu/~eunbyung/abidc
 
 ### 4.2 Evaluation on validataion sets
 ```
-$(abid_challenge_root)/counting> CUDA_VISIBLE_DEVICES=0 python train.py ~/Works/data/amazon_bin/public_images_resize/ -a resnet34 --evaluate True --resume ./snapshots/resnet34_best.pth.tar
+$(abid_challenge_root)/counting> CUDA_VISIBLE_DEVICES=0 python train.py $(data)/public_images_resize/ -a resnet34 --evaluate True --resume ./snapshots/resnet34_best.pth.tar
 ```
-You should be able to get 57.4% accuracy. You also get output file 'counting_result.txt', which is going to be your submission file format. Each line contains a integer value(count) corresponding to one image being evaluated. You will be evaluated by two metrics, accuracy and RMSE(Root Mean Square Error). Following shows the results on validation split.
+You should be able to get 57.4% accuracy. You also get output file 'counting_result.txt', which is going to be your submission file format. Each line contains a integer value(count) corresponding to one image being evaluated. You will be evaluated by two metrics, accuracy and RMSE(Root Mean Square Error). Following shows the results on validation split(you can also get same outputs with evaluate.py script)
 
 | Accuracy(%) | RMSE(Root Mean Square Error)|
 |----------------------|--------|
@@ -219,7 +219,7 @@ When testing, we are given one image and the name of object category(asin) in qu
 ### 5.1 Training
 ```
 $(abid_challenge_root)/verification_siamese> mkdir snapshots
-$(abid_challenge_root)/verification_siamese> CUDA_VISIBLE_DEVICES=0 train.py $(data)/public_images_resize/ -a resnet34 -b 128 --epochs 40
+$(abid_challenge_root)/verification_siamese> CUDA_VISIBLE_DEVICES=0 python train.py $(data)/public_images_resize/ -a resnet34 -b 128 --epochs 40
 ```
 It will run 40 epochs, and every 10 epochs learning rate will decay by a factor of 0.1. 1 epoch means the network goes through all training images once. Resnet34 architecture will be used and it will be trained from the scratch and batch size is 128. Following shows loss curves and validation accuracy. Here we got best validation accuracy at 36 epoch.
 
@@ -231,7 +231,7 @@ You can download pre-trained models [here](http://www.cs.unc.edu/~eunbyung/abidc
 
 ### 5.2 Evaluation on validataion sets
 ```
-$(abid_challenge_root)/verification_siamese> CUDA_VISIBLE_DEVICES=0 python train.py ~/Works/data/amazon_bin/public_images_resize/ -a resnet34 --evaluate True --resume ./snapshots/resnet34_siamese_best.pth.tar
+$(abid_challenge_root)/verification_siamese> CUDA_VISIBLE_DEVICES=0 python train.py $(data)/public_images_resize/ -a resnet34 --evaluate True --resume ./snapshots/resnet34_siamese_best.pth.tar
 ```
 You should be able to get 76.8% accuracy. You also get output file 'obj_verification_result.txt', which is going to be your submission file format. Each line contains a binary value(0 or 1) corresponding to one pair(image and question). You will be evaluated by accuracy metric.
 
