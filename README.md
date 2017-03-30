@@ -185,7 +185,7 @@ You can download pre-trained models [here](http://www.cs.unc.edu/~eunbyung/abidc
 
 ### 4.2 Evaluation on validataion sets
 ```
-$(abid_challenge_root)/verification_siamese> CUDA_VISIBLE_DEVICES=0 python train.py ~/Works/data/amazon_bin/public_images_resize/ -a resnet34 --evaluate True --resume ./snapshots/resnet34_best.pth.tar
+$(abid_challenge_root)/counting> CUDA_VISIBLE_DEVICES=0 python train.py ~/Works/data/amazon_bin/public_images_resize/ -a resnet34 --evaluate True --resume ./snapshots/resnet34_best.pth.tar
 ```
 You should be able to get 57.4% accuracy. You also get output file 'counting_result.txt', which is going to be your submission file format. Each line contains a integer value(count) corresponding to one image being evaluated. You will be evaluated by two metrics, accuracy and RMSE(Root Mean Square Error). Following shows the results on validation split.
 
