@@ -104,22 +104,23 @@ These are some typical images in the dataset. A bin contains multiple object cat
 This is an example of image(jpg) and metadata(json) pair. This image contains 3 different object categories. For each category, there is one instance. So, "EXPECTED_QUANTITY" is 3, and for each object category "quantity" field was 1. Unique identifier("asin") is assigned to each object category, e.g. here "B00CFQWRPS", "B00T0BUKW8", and "B00C3WXJHY". 
 
 ### 2.2 Dataset statistics
-| Description | Quantity |
-|----------------------|--------|
-| The number of images | 535,050 |
-| Average quantity in a bin | 5.1 |
-| The number of object categories | 459,476 |
+| Description | Total | Train | Validation | 
+|----------------------|---------|---------|--------|
+| The number of images | 535,050 | 481,527 | 53,523 |
+| Average quantity in a bin | 5.1 | 5.1 | 5.1 |
+| The number of object categories | 459,476 | 441,369 | 104,928 |
 
 ![stats](figs/stats.png)
 
 The left figure shows the distribution of quantity in a bin(90% of bin images contains less then 10 object instances in a bin). The right figure shows the distribution of object repetition. 164,255 object categories (out of 459,475) showed up only once across entire dataset, and 164,356 object categories showed up twice. The number of object categories that showed up 10 times was 3038.
 
-## 3. Data preparation
-
-### 3.0 Prerequisite
+## Prerequisites
 1. [PyTorch](https://github.com/pytorch/pytorch)
 2. [torch-vision](https://github.com/pytorch/vision)
 3. This code is heavily based on pytorch [example codes](https://github.com/pytorch/examples)
+
+## 3. Data preparation
+[dataset](dataset) directory includes useful codes for dataset preparation and development kits.
 
 ### 3.1 Downloading data
 You need to download the dataset first and locate images and metadata in same directory, e.g. $(data)/public_images, $(data)/metadata. Soft link to them in dataset directory. For downloading, find more details at [here](https://aws.amazon.com/ko/public-datasets/amazon-bin-images/)
