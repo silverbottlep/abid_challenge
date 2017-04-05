@@ -1,5 +1,11 @@
 #!/bin/bash
 curl -O "http://www.cs.unc.edu/~eunbyung/abidc/counting_train.json"
 curl -O "http://www.cs.unc.edu/~eunbyung/abidc/counting_val.json"
+curl -O "http://www.cs.unc.edu/~eunbyung/abidc/counting_train_hard.json"
+curl -O "http://www.cs.unc.edu/~eunbyung/abidc/counting_val_hard.json"
 curl -O "http://www.cs.unc.edu/~eunbyung/abidc/obj_verification_train.json"
 curl -O "http://www.cs.unc.edu/~eunbyung/abidc/obj_verification_val.json"
+curl -O "http://www.cs.unc.edu/~eunbyung/abidc/obj_verification_train_hard.json"
+curl -O "http://www.cs.unc.edu/~eunbyung/abidc/obj_verification_val_hard.json"
+curl -O "http://www.cs.unc.edu/~eunbyung/abidc/obj_num_verification_val.json"
+curl -O "http://www.cs.unc.edu/~eunbyung/abidc/obj_num_verification_val_hard.json"
