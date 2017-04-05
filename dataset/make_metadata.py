@@ -5,15 +5,16 @@ import numpy as np
 import random
 import json
 
-img_dir= "data/public_images/"
+img_dir= "data/bin-images/"
 meta_dir = "data/metadata/"
 
 # getting whole metadata list 
 def get_metadata(img_dir,meta_dir):
     metadata=[]
     n_images=0
-    img_list = listdir(img_dir)
-    N = len(img_list)
+#    img_list = listdir(img_dir)
+#    N = len(img_list)
+    N = 535234
     for i in range(N):
         if i%1000 == 0:
             print("get_metadata: processing (%d/%d)..." % (i,N))

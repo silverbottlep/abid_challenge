@@ -2,16 +2,18 @@ from PIL import Image
 from os import listdir
 import os.path
 
-img_dir = "data/public_images/"
-resized_img_dir = "data/public_images_resize/"
+img_dir = "data/bin-images/"
+resized_img_dir = "data/bin-images-resize/"
 
 if not os.path.exists(resized_img_dir):
     os.makedirs(resized_img_dir)
 
-img_list = listdir(img_dir)
-N = len(img_list)
+#img_list = listdir(img_dir)
+#N = len(img_list)
+N = 535234
 count = 0
-for fname in img_list:
+for i in range(N):
+    fname = '%05d.jpg' % (i+1)
     jpg_path = os.path.join(img_dir,fname)
     resized_jpg_path = os.path.join(resized_img_dir,fname)
     img = Image.open(jpg_path).convert('RGB')

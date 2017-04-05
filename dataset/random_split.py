@@ -4,11 +4,12 @@ import os.path
 import numpy as np
 import random
 
-img_dir= "data/public_images/"
+img_dir= "data/bin-images/"
 meta_dir = "data/metadata/"
 
-img_list = listdir(img_dir)
-N = len(img_list)
+#img_list = listdir(img_dir)
+#N = len(img_list)
+N = 535234
 list_random = range(N)
 random.shuffle(list_random)
 
