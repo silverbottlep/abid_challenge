@@ -305,7 +305,7 @@ We don't provide metadata for training purpose(it's up to you!). But we provide 
 
 ......
 ```
-Each entries contains image index, object asin in question, positive or negative(1 or 0), ground truth quantity, quantity in question.  If the question is positive, ground truth quantity and quantity in question must be same. If not, the quantity in question was randomly selected.
+Each entries contains image index, object asin in question, positive or negative(1 or 0), ground truth quantity, quantity in question.  If the question is positive, ground truth quantity and quantity in question must be same. If not, the quantity in question was randomly selected. We also put the image indices of training sets that contain the object in question for you convinience.
 
 ## 7. Contacts
 For general challenge questions, please use ilsvrc@image-net.org. For specific amazon bin dataset questions, please send to eunbyung@cs.unc.edu.
