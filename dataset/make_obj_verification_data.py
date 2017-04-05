@@ -11,6 +11,8 @@ random_val = "random_val.txt"
 metadata_file = "metadata.json"
 instance_file = "instances.json"
 
+hard = False
+
 # get quantity given index
 def get_quantity(idx):
     quantity = 0
@@ -18,18 +20,21 @@ def get_quantity(idx):
         quantity = metadata[idx]['EXPECTED_QUANTITY']
     return quantity
 
-# get an array that shows if the images are 0 < quantity < 6
-# True or False
-def get_moderate(split_file):
+# True or False array
+def get_candidates(split_file):
     print("loading random split file")
-    moderate = np.zeros(N,bool)
+    candidates = np.zeros(N,bool)
     with open(split_file) as f:
         for line in f.readlines():
             idx = int(line)-1
             quantity = get_quantity(idx)
-            if quantity > 0 and quantity < 6:
-                moderate[idx] = True
-    return moderate 
+            if hard:
+                if quantity > 0:
+                    candidates[idx] = True
+            else:
+                if quantity > 0 and quantity < 6:
+                    candidates[idx] = True
+    return candidates
 
 # making split train list
 # each element, it contains (image idx, object list)
@@ -111,22 +116,31 @@ if __name__ == "__main__":
     N = len(metadata)
     N_inst = len(instance_keys)
 
-    moderate_train = get_moderate(random_train)
-    moderate_val = get_moderate(random_val)
+    train_candidates = get_candidates(random_train)
+    val_candidates = get_candidates(random_val)
 
     # building training sets
-    train_list = get_train_list(moderate_train)
+    train_list = get_train_list(train_candidates)
 
     # building validataion sets
-    val_pos_list = get_val_pos_list(moderate_train, moderate_val)
-    val_neg_list = get_val_neg_list(moderate_train, moderate_val)
+    val_pos_list = get_val_pos_list(train_candidates, val_candidates)
+    val_neg_list = get_val_neg_list(train_candidates, val_candidates)
     pos_samples = random.sample(val_pos_list,20000)
     neg_samples = random.sample(val_neg_list,20000)
     val_list = pos_samples + neg_samples
     random.shuffle(val_list)
     
     print("dumping train and val sets into json file")
-    with open('obj_verification_train.json','wb') as f:
+    if hard:
+        out_fname = 'obj_verification_train_hard.json'
+    else:
+        out_fname = 'obj_verification_train.json'
+    with open(out_fname,'wb') as f:
         json.dump(train_list,f)
-    with open('obj_verification_val.json','wb') as f:
+
+    if hard:
+        out_fname = 'obj_verification_val_hard.json'
+    else:
+        out_fname = 'obj_verification_val.json'
+    with open(out_fname,'wb') as f:
         json.dump(val_list,f)

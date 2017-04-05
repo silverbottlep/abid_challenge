@@ -10,6 +10,8 @@ random_train = "random_train.txt"
 random_val = "random_val.txt"
 metadata_file = "metadata.json"
 
+hard = False
+
 def get_quantity(idx):
     quantity = 0
     if metadata[idx]:
@@ -23,8 +25,11 @@ def get_moderate_list(split_file):
         for line in f.readlines():
             idx = int(line)-1
             quantity = get_quantity(idx)
-            if quantity < 6:
+            if hard:
                 train_list.append([idx,quantity])
+            else:
+                if quantity < 6:
+                    train_list.append([idx,quantity])
     return train_list 
 
 if __name__ == "__main__":
@@ -37,7 +42,16 @@ if __name__ == "__main__":
     val_list = get_moderate_list(random_val)
 
     print("dumping train and val sets into json file")
-    with open('counting_train.json','wb') as f:
+    if hard:
+        out_fname = 'counting_train_hard.json'
+    else:
+        out_fname = 'counting_train.json'
+    with open(out_fname,'wb') as f:
         json.dump(train_list,f)
-    with open('counting_val.json','wb') as f:
+
+    if hard:
+        out_fname = 'counting_val_hard.json'
+    else:
+        out_fname = 'counting_val.json'
+    with open(out_fname,'wb') as f:
         json.dump(val_list,f)
