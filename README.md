@@ -21,7 +21,7 @@ This is a task for verifying the quantity of the object in the bin. You will be 
 ### Evaluation metrics
 For counting task, you will be evaluated by two standrad metrics, accuracy(precision) and root mean square error(RMSE). 1 is indicator function, and p and g is prediction and ground truth respectively.
 
-![eq_accuracy](figs/eq_metrics.png)
+![eq_metrics](figs/eq_metrics.png)
 
 For both verification tasks, you will be evaluated by accuracy.
 
