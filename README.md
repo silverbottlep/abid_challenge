@@ -4,7 +4,7 @@ The Amazon Bin Image Dataset contains images and metadata from bins of a pod in 
 
 #### How to participate in?
 1. Register at [here](http://www.image-net.org/challenges/LSVRC/2017/signup) and download data at [here](https://aws.amazon.com/ko/public-datasets/amazon-bin-images/)
-2. Use [devkit](dataset)and basline models [here](https://github.com/silverbottlep/abid_challenge)
+2. Use [devkit](dataset) and provided basline models [here](https://github.com/silverbottlep/abid_challenge)
 3. Enjoy and be creative!! (submission deadline is 5pm PDT, Jun 30)
 
 #### News!! we are currently under updating process(updating train/val splits and new test sets). We hope it will be finalized in few weeks! But you can stil play with the dataset and tasks.
