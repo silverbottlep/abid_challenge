@@ -1,8 +1,6 @@
 # Amazon Bin Image Dataset(ABID) Challenge
 
-#### News: The amazon bin image dataset taster challenge will not be held at CVPR 2017. There were some issues on releasing the final data. We sincerely apologize to the teams that have been working on this challenge.
-
-The Amazon Bin Image Dataset contains images and metadata from bins of a pod in an operating Amazon Fulfillment Center. The bin images in this dataset are captured as robot units carry pods as part of normal Amazon Fulfillment Center operations. You can download and find the details at [here](https://aws.amazon.com/ko/public-datasets/amazon-bin-images/).  We propose 3 different tasks, which would be practically useful when we want to double-check the bins before they are packed or delivered. Tasks are sometimes very challenging because of heavy occlusions and a large number of object categories. We would like to open a new challenge in order to attract talented researchers in both academia and industries for these tasks. As a starting point, we provide baseline methods and pre-trained models for two tasks, counting and object verification tasks.
+The Amazon Bin Image Dataset contains images and metadata from bins of a pod in an operating Amazon Fulfillment Center. The bin images in this dataset are captured as robot units carry pods as part of normal Amazon Fulfillment Center operations. You can download and find the details at [here](https://aws.amazon.com/ko/public-datasets/amazon-bin-images/).  We propose 3 different tasks, which would be practically useful when we want the bins double-checked. These tasks are sometimes very challenging because of heavy occlusions and a large number of object categories. We would like to open a new challenge in order to attract talented researchers in both academia and industry for these tasks. As a starting point, we provide baseline methods and pre-trained models for two tasks, counting and object verification tasks.
 
 ## 1. Tasks
 
